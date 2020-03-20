@@ -48,6 +48,7 @@ def main():
     M.update(C.model)
     pprint.pprint(C, indent=4)
 
+
     random.seed(0)
     np.random.seed(0)
     torch.manual_seed(0)
@@ -74,12 +75,15 @@ def main():
     else:
         raise NotImplementedError
 
+    torch.cuda.empty_cache()
     checkpoint = torch.load(args["<checkpoint>"])
     model = MultitaskLearner(model)
     model = LineVectorizer(model)
     model.load_state_dict(checkpoint["model_state_dict"])
+
     model = model.to(device)
     model.eval()
+
 
     loader = torch.utils.data.DataLoader(
         WireframeDataset(args["<image-dir>"], split="valid"),

@@ -191,9 +191,11 @@ def save_heatmap(prefix, image, lines):
 
 
 def main():
-    args = docopt(__doc__)
-    data_root = args["<src>"]
-    data_output = args["<dst>"]
+    # args = docopt(__doc__)
+    data_root = "/home/jasmeet/Documents/AdvanceComputerVision/YorkUrbanDB"
+
+    data_output = "/home/jasmeet/Documents/AdvanceComputerVision/YorkUrbanDB-lcnn"
+
     os.makedirs(data_output, exist_ok=True)
 
     dataset = sorted(glob.glob(osp.join(data_root, "*/*.jpg")))

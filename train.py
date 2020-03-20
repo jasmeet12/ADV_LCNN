@@ -31,7 +31,7 @@ import numpy as np
 import torch
 import yaml
 from docopt import docopt
-
+from GPUtil import showUtilization as gpu_usage
 import lcnn
 from lcnn.config import C, M
 from lcnn.datasets import WireframeDataset, collate
@@ -62,6 +62,10 @@ def get_outdir(identifier):
 
 
 def main():
+    torch.cuda.empty_cache()
+    print("Initial GPU Usage")
+    gpu_usage()
+
     args = docopt(__doc__)
     config_file = args["<yaml-config>"] or "config/wireframe.yaml"
     C.update(C.from_yaml(filename=config_file))
@@ -110,8 +114,8 @@ def main():
         **kwargs,
     )
     epoch_size = len(train_loader)
-    # print("epoch_size (train):", epoch_size)
-    # print("epoch_size (valid):", len(val_loader))
+    print("epoch_size (train):", epoch_size)
+    print("epoch_size (valid):", len(val_loader))
 
     if resume_from:
         checkpoint = torch.load(osp.join(resume_from, "checkpoint_latest.pth"))

@@ -1,6 +1,7 @@
 io:
   logdir: logs/
-  datadir: data/wireframe/
+  datadir: /data/indoor
+
   resume_from:
   num_workers: 4
   tensorboard_port: 0
@@ -11,8 +12,8 @@ model:
       mean: [109.730, 103.832, 98.681]
       stddev: [22.275, 22.124, 23.229]
 
-  batch_size: 6
-  batch_size_eval: 2
+  batch_size: 1
+  batch_size_eval: 1
 
   # backbone multi-task parameters
   head_size: [[2], [1], [2]]
@@ -65,5 +66,5 @@ optim:
   lr: 4.0e-4
   amsgrad: True
   weight_decay: 1.0e-4
-  max_epoch: 24
+  max_epoch: 15
   lr_decay_epoch: 10
