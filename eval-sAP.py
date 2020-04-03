@@ -29,11 +29,11 @@ import lcnn.utils
 import lcnn.metric
 
 #wireframe
-# GT = "data/wireframe/valid/*.npz"
+GT = "data/wireframe/valid/*.npz"
 #infoor
 #GT = "data/indoor/valid/*.npz"
 #outdoor
-GT = "data/outdoor/valid/*.npz"
+# GT = "data/outdoor/valid/*.npz"
 
 
 def line_score(path, threshold=5):

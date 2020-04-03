@@ -158,6 +158,8 @@ class LineVectorizer(nn.Module):
 
             n_type = jmap.shape[0]
             jmap = non_maximum_suppression(jmap).reshape(n_type, -1)
+            # jcs = [xy[i, score[i] > 0.03] for i in range(n_type)]
+
             joff = joff.reshape(n_type, 2, -1)
             max_K = M.n_dyn_junc // n_type
             N = len(junc)
@@ -238,15 +240,17 @@ class LineVectorizer(nn.Module):
                 ],
                 1,
             )
+
+
             line = torch.cat([xyu[:, None], xyv[:, None]], 1)
 
             xy = xy.reshape(n_type, K, 2)
-            jcs = [xy[i, score[i] > 0.03] for i in range(n_type)]
+            jcs = [xy[i, score[i] > 0.1] for i in range(n_type)]
             return line, label.float(), feat, jcs
 
 
 def non_maximum_suppression(a):
-    ap = F.max_pool2d(a, 3, stride=1, padding=1)
+    ap = F.max_pool2d(a, 5, stride=1, padding=2)
     mask = (a == ap).float().clamp(min=0.0)
     return a * mask
 

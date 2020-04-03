@@ -53,6 +53,7 @@ def get_outdir(identifier):
     name += "-%s" % git_hash()
     name += "-%s" % identifier
     outdir = osp.join(osp.expanduser(C.io.logdir), name)
+    # outdir = '/home/jasmeet/Documents/AdvanceComputerVision/lcnn/lcnn/logs/200328-113338-51ecb70-baseline'
     if not osp.exists(outdir):
         os.makedirs(outdir)
     C.io.resume_from = outdir

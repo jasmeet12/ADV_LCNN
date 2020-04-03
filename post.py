@@ -70,7 +70,7 @@ def main():
 
     inputs = list(zip(files, inames, gts))
     thresholds = list(map(float, args["--thresholds"].split(",")))
-
+    thresholds = [0.010]
     def handle(allname):
         fname, iname, gtname = allname
         print("Processing", fname)

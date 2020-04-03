@@ -1,6 +1,6 @@
 io:
   logdir: logs/
-  datadir: /data/indoor
+  datadir: data/wireframe/
 
   resume_from:
   num_workers: 4
@@ -19,10 +19,15 @@ model:
   head_size: [[2], [1], [2]]
   loss_weight:
     jmap: 8.0
+#    jssim: 1.0
     lmap: 0.5
     joff: 0.25
     lpos: 1
     lneg: 1
+    mse: 0.5
+    ssim: 0.25
+
+
 
   # backbone parameters
   backbone: stacked_hourglass
@@ -66,5 +71,5 @@ optim:
   lr: 4.0e-4
   amsgrad: True
   weight_decay: 1.0e-4
-  max_epoch: 15
+  max_epoch: 24
   lr_decay_epoch: 10

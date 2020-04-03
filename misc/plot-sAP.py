@@ -20,13 +20,16 @@ except Exception:
     raise
 
 # Change the directory here
-PRED = "logs/190418-201834-f8934c6-lr4d10/npz/000312000/*.npz"
-PRED = "post/jmap_0008/*.npz"
-GT = "data/wireframe/valid/*.npz"
+PRED = "/home/jasmeet/Documents/AdvanceComputerVision/lcnn/lcnn/logs/200328-113338-51ecb70-baseline/npz/000096000"
+
+# PRED = "post/jmap_0008/*.npz"
+GT = "/home/jasmeet/Documents/AdvanceComputerVision/lcnn/lcnn/data/wireframe/valid/*.npz"
 # PRED = "logs/190506-001532-york/*.npz"
 # GT = "data/york/valid/*.npz"
-WF = "/data/lcnn/wirebase/result/wireframe/wireframe_1_rerun-baseline_0.5_0.5/*"
-AFM = "/data/lcnn/wirebase/result/wireframe/afm/*.npz"
+# WF = "/data/lcnn/wirebase/result/wireframe/wireframe_1_rerun-baseline_0.5_0.5/*"
+# AFM = "/data/lcnn/wirebase/result/wireframe/afm/*.npz"
+
+WF = "/home/jasmeet/Documents/logs/200305-185524-49f1b45-baseline/npz/000192000"
 
 
 mpl.rcParams.update({"font.size": 16})
@@ -39,7 +42,8 @@ def wireframe_score(T=10):
     gts = glob.glob(GT)
     gts.sort()
     dirs = glob.glob(WF)
-    dirs.sort(key=lambda x: -float(osp.split(x)[-1]))
+    dirs.sort()
+    # dirs.sort(key=lambda x: -float(osp.split(x)[-1]))
 
     precision, recall = [], []
     for threshold in dirs:
@@ -88,37 +92,40 @@ def wireframe_score(T=10):
 def line_score(threshold=10):
     preds = sorted(glob.glob(PRED))
     gts = sorted(glob.glob(GT))
-    afm = sorted(glob.glob(AFM))
+    # afm = sorted(glob.glob(AFM))
 
     lcnn_tp, lcnn_fp, lcnn_scores = [], [], []
-    lsd_tp, lsd_fp, lsd_scores = [], [], []
-    afm_tp, afm_fp, afm_scores = [], [], []
+    lcnn1_tp, lcnn1_fp, lcnn1_scores = [], [], []
+
+
+    # lsd_tp, lsd_fp, lsd_scores = [], [], []
+    # afm_tp, afm_fp, afm_scores = [], [], []
     n_gt = 0
-    for pred_name, gt_name, afm_name in zip(preds, gts, afm):
-        image = gt_name.replace("_label.npz", ".png")
-
-        img = cv2.imread(image, 0)
-        lsd = cv2.createLineSegmentDetector(cv2.LSD_REFINE_ADV)
-        lsd_line, _, _, lsd_score = lsd.detect(img)
-        lsd_line = lsd_line.reshape(-1, 2, 2)[:, :, ::-1]
-        lsd_score = lsd_score.flatten()
-        # print(lines.shape)
-        # print(nfa.shape)
-
+    for pred_name, gt_name in zip(preds, gts):
+    #     image = gt_name.replace("_label.npz", ".png")
+    #
+    #     img = cv2.imread(image, 0)
+    #     lsd = cv2.createLineSegmentDetector(cv2.LSD_REFINE_ADV)
+    #     lsd_line, _, _, lsd_score = lsd.detect(img)
+    #     lsd_line = lsd_line.reshape(-1, 2, 2)[:, :, ::-1]
+    #     lsd_score = lsd_score.flatten()
+    #     # print(lines.shape)
+    #     # print(nfa.shape)
+    #
         with np.load(pred_name) as fpred:
             lcnn_line = fpred["lines"][:, :, :2]
             lcnn_score = fpred["score"]
         lcnn_line = lcnn_line[:, :, :2]
         with np.load(gt_name) as fgt:
             gt_line = fgt["lpos"][:, :, :2]
-
-        with np.load(afm_name) as fafm:
-            afm_line = fafm["lines"].reshape(-1, 2, 2)[:, :, ::-1]
-            afm_score = -fafm["scores"]
-            h = fafm["h"]
-            w = fafm["w"]
-        afm_line[:, :, 0] *= 128 / h
-        afm_line[:, :, 1] *= 128 / w
+    #
+    #     with np.load(afm_name) as fafm:
+    #         afm_line = fafm["lines"].reshape(-1, 2, 2)[:, :, ::-1]
+    #         afm_score = -fafm["scores"]
+    #         h = fafm["h"]
+    #         w = fafm["w"]
+    #     afm_line[:, :, 0] *= 128 / h
+    #     afm_line[:, :, 1] *= 128 / w
         for i, ((a, b), s) in enumerate(zip(lcnn_line, lcnn_score)):
             if i > 0 and (lcnn_line[i] == lcnn_line[0]).all():
                 lcnn_line = lcnn_line[:i]
@@ -144,15 +151,15 @@ def line_score(threshold=10):
         lcnn_fp.append(fp)
         lcnn_scores.append(lcnn_score)
 
-        tp, fp = lcnn.metric.msTPFP(lsd_line, gt_line, threshold)
-        lsd_tp.append(tp)
-        lsd_fp.append(fp)
-        lsd_scores.append(lsd_score)
+        # tp, fp = lcnn.metric.msTPFP(lsd_line, gt_line, threshold)
+        # lsd_tp.append(tp)
+        # lsd_fp.append(fp)
+        # lsd_scores.append(lsd_score)
 
-        tp, fp = lcnn.metric.msTPFP(afm_line, gt_line, threshold)
-        afm_tp.append(tp)
-        afm_fp.append(fp)
-        afm_scores.append(afm_score)
+        # tp, fp = lcnn.metric.msTPFP(afm_line, gt_line, threshold)
+        # afm_tp.append(tp)
+        # afm_fp.append(fp)
+        # afm_scores.append(afm_score)
 
         n_gt += len(gt_line)
 

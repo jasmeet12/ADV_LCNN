@@ -30,11 +30,11 @@ import lcnn.models
 from lcnn.metric import mAPJ, post_jheatmap
 
 #wireframe
-# GT = "data/wireframe/valid/*.npz"
+GT = "data/wireframe/valid/*.npz"
 #indoor
 #GT = "data/indoor/valid/*.npz"
 #outdoor
-GT = "data/outdoor/valid/*.npz"
+# GT = "data/outdoor/valid/*.npz"
 IM = "data/wireframe/valid-images/*.jpg"
 WF = "/data/wirebase/result/junc/2/17"
 AFM = "/data/wirebase/result/wireframe/afm/*.npz"
